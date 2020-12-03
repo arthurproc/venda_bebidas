@@ -2,63 +2,63 @@ import java.io.*;
 
 public class Bebida {
 
-	char 	ativo;
-	String	codVenda;
-	String 	nomeCliente;
-	String 	codProduto;
-	String  descProduto;
-	String  dtVenda;
-	int     quantidade;
-	float   precoUnitario;
-	float 	vlrImposto;
+	char ativo;
+	String codVenda;
+	String nomeCliente;
+	String codProduto;
+	String descProduto;
+	String dtVenda;
+	int quantidade;
+	float precoUnitario;
+	float vlrImposto;
 
-	
-	static String vetCodProdutos[] = {"WJW", "CSL"};
-	
-	static String vetDescProdutos[] = {"Whisky Jhony Walker"};
-	
-	static String vetCategorias [] = {"Destilado alcoolico importado"};
-	
-	
-	
-	
-	public long pesquisarVenda(String codVendaPesq) {	
+	static String vetCodProdutos[] = { "WJW", "CSL", "CBL", "CCO", "GAN", "WCB", "WBL", "VCT", "VTM", "SLT" };
+
+	static String vetDescProdutos[] = { "Whisky Johny Walker", "Cerveja Skol Lata", "Cerveja Brahma Lata",
+			"Coca Cola 2lts", "Guaraná Antártica 2lts", "Whisky Cavalo Branco", "Whisky Ballantines", "Vinho Concha Y Toro",
+			"Vinho Tinto Miolo", "Suco Laranja Tropicana" };
+
+	static String vetCategorias[] = { "destilado alcoólico importado", "fermentado alcoólico nacional",
+			"fermentado alcoólico nacional", "sem álcool nacional", "sem álcool nacional", "destilado alcoólico importado",
+			"destilado alcoólico importado", "alcoólico importado", "alcoólico nacional", "sem álcool importado" };
+
+	public long pesquisarVenda(String codVendaPesq) {
 		// metodo para localizar um registro no arquivo em disco
 		long posicaoCursorArquivo = 0;
-		try { 
+		try {
 			RandomAccessFile arqVendas = new RandomAccessFile("VENDAS.DAT", "rw");
 			while (true) {
-				posicaoCursorArquivo  = arqVendas.getFilePointer();	// posicao do inicio do registro no arquivo
-				
-				ativo		 	  = arqVendas.readChar();
-				codVenda   		  = arqVendas.readUTF();
-				nomeCliente   	  = arqVendas.readUTF();
-				codProduto        = arqVendas.readUTF();
-				descProduto 	  = arqVendas.readUTF();
-				dtVenda 		  = arqVendas.readUTF();
-				quantidade 		  = arqVendas.readInt();
-				precoUnitario 	  = arqVendas.readFloat();
-				vlrImposto        = arqVendas.readFloat();
+				posicaoCursorArquivo = arqVendas.getFilePointer(); // posicao do inicio do registro no arquivo
 
-				if ( codVendaPesq.equals(codVenda) && ativo == 'S') {
+				ativo = arqVendas.readChar();
+				codVenda = arqVendas.readUTF();
+				nomeCliente = arqVendas.readUTF();
+				codProduto = arqVendas.readUTF();
+				descProduto = arqVendas.readUTF();
+				dtVenda = arqVendas.readUTF();
+				quantidade = arqVendas.readInt();
+				precoUnitario = arqVendas.readFloat();
+				vlrImposto = arqVendas.readFloat();
+
+				if (codVendaPesq.equals(codVenda) && ativo == 'S') {
 					arqVendas.close();
 					return posicaoCursorArquivo;
 				}
 			}
-		}catch (EOFException e) {
+		} catch (EOFException e) {
 			return -1; // registro nao foi encontrado
-		}catch (IOException e) { 
+		} catch (IOException e) {
 			System.out.println("Erro na abertura do arquivo  -  programa sera finalizado");
 			System.exit(0);
 			return -1;
 		}
 	}
 
-	public void salvarVenda() {	
+	public void salvarVenda() {
 		// metodo para incluir um novo registro no final do arquivo em disco
 		try {
-			RandomAccessFile arqVendas = new RandomAccessFile("VENDAS.DAT", "rw");	
-			arqVendas.seek(arqVendas.length());  // posiciona o ponteiro no final do arquivo (EOF)
+			RandomAccessFile arqVendas = new RandomAccessFile("VENDAS.DAT", "rw");
+			arqVendas.seek(arqVendas.length()); // posiciona o ponteiro no final do arquivo (EOF)
 			arqVendas.writeChar(ativo);
 			arqVendas.writeUTF(codVenda);
 			arqVendas.writeUTF(nomeCliente);
@@ -67,29 +67,30 @@ public class Bebida {
 			arqVendas.writeUTF(dtVenda);
 			arqVendas.writeInt(quantidade);
 			arqVendas.writeFloat(precoUnitario);
-			arqVendas.writeFloat(vlrImposto);		    
+			arqVendas.writeFloat(vlrImposto);
 			arqVendas.close();
 			System.out.println("Dados gravados com sucesso !\n");
-		}catch (IOException e) { 
+		} catch (IOException e) {
 			System.out.println("Erro na abertura do arquivo  -  programa sera finalizado");
 			System.exit(0);
 		}
 	}
 
-	public void desativarVenda(long posicao)	{    
-		// metodo para alterar o valor do campo ATIVO para N, tornando assim o registro excluido
+	public void desativarVenda(long posicao) {
+		// metodo para alterar o valor do campo ATIVO para N, tornando assim o registro
+		// excluido
 		try {
-			RandomAccessFile arqVendas = new RandomAccessFile("VENDAS.DAT", "rw");			
+			RandomAccessFile arqVendas = new RandomAccessFile("VENDAS.DAT", "rw");
 			arqVendas.seek(posicao);
-			arqVendas.writeChar('N');   // desativar o registro antigo
+			arqVendas.writeChar('N'); // desativar o registro antigo
 			arqVendas.close();
-		}catch (IOException e) { 
+		} catch (IOException e) {
 			System.out.println("Erro na abertura do arquivo  -  programa sera finalizado");
 			System.exit(0);
 		}
 	}
 
-	// ***********************   INCLUSAO   *****************************
+	// *********************** INCLUSAO *****************************
 	public void incluir() {
 		String codVendaChave;
 		char confirmacao;
@@ -109,31 +110,31 @@ public class Bebida {
 				if (posicaoRegistro >= 0) {
 					System.out.println("Venda ja cadastrada, digite outro valor\n");
 				}
-			}while (posicaoRegistro >= 0);
+			} while (posicaoRegistro >= 0);
 
 			if (codVendaChave.equals("FIM")) {
 				break;
 			}
-			
+
 			descProduto = " ";
 			vlrImposto = 0;
-			
 
 			ativo = 'S';
 			codVenda = codVendaChave;
 			System.out.print("Digite o nome do cliente.........................: ");
 			nomeCliente = Main.leia.nextLine();
-			System.out.print("Digite o c�digo da venda.........................: ");
+			System.out.print("Digite o c�digo da venda.........................: ");
 			codVenda = Main.leia.next();
-			System.out.println("Descri��o do produto...........................: " + descProduto);
+			System.out.println("Descri��o do produto...........................: " + descProduto);
 			System.out.print("Data da venda..................................: ");
 			dtVenda = Main.leia.next();
 			System.out.print("Quantidade Vendiada............................: ");
 			quantidade = Main.leia.nextInt();
-			System.out.print("Pre�o unit�rio.................................: ");
+			System.out.print("Pre�o unit�rio.................................: ");
 			precoUnitario = Main.leia.nextFloat();
 			System.out.println("Valor do imposto...............................: " + vlrImposto);
-			System.out.println("Valor final da venda...........................: " + (quantidade * precoUnitario + quantidade * vlrImposto));
+			System.out.println(
+					"Valor final da venda...........................: " + (quantidade * precoUnitario + quantidade * vlrImposto));
 
 			do {
 				System.out.print("\nConfirma a gravacao dos dados (S/N) ? ");
@@ -141,13 +142,12 @@ public class Bebida {
 				if (confirmacao == 'S') {
 					salvarVenda();
 				}
-			}while (confirmacao != 'S' && confirmacao != 'N');
+			} while (confirmacao != 'S' && confirmacao != 'N');
 
-		}while ( ! codVenda.equals("FIM"));	    
+		} while (!codVenda.equals("FIM"));
 	}
 
-
-	//************************  ALTERACAO  *****************************
+	// ************************ ALTERACAO *****************************
 	public void alterar() {
 		String codVendaChave;
 		char confirmacao;
@@ -166,9 +166,9 @@ public class Bebida {
 
 				posicaoRegistro = pesquisarVenda(codVendaChave);
 				if (posicaoRegistro == -1) {
-					System.out.println("Venda n�o cadastrada no arquivo, digite outro valor\n");
+					System.out.println("Venda n�o cadastrada no arquivo, digite outro valor\n");
 				}
-			}while (posicaoRegistro == -1);
+			} while (posicaoRegistro == -1);
 
 			if (codVendaChave.equals("FIM")) {
 				break;
@@ -180,35 +180,35 @@ public class Bebida {
 				System.out.println("[ 1 ] Nome do Cliente............: " + nomeCliente);
 				System.out.println("[ 2 ] Data da venda..............: " + dtVenda);
 				System.out.println("[ 3 ] Quantidade Vendida ........: " + quantidade);
-				System.out.println("[ 4 ] Pre�o unit�rio.............: " + precoUnitario);
+				System.out.println("[ 4 ] Pre�o unit�rio.............: " + precoUnitario);
 
-				do{
+				do {
 					System.out.println("Digite o numero do campo que deseja alterar (0 para finalizar as alterações): ");
 					opcao = Main.leia.nextByte();
-				}while (opcao < 0 || opcao > 4);
+				} while (opcao < 0 || opcao > 4);
 
 				switch (opcao) {
-				case 1:
-					Main.leia.nextLine();
-					System.out.print  ("Digite o NOVO NOME do Cliente......................: ");
-					nomeCliente = Main.leia.nextLine();
-					break;
-				case 2: 
-					Main.leia.nextLine();
-					System.out.print  ("Digite a NOVA DATA de venda (DD/MM/AAAA)...........: ");
-					dtVenda = Main.leia.nextLine();
-					break;
-				case 3:
-					System.out.print  ("Digite a NOVA QUANTIDADE de produtos vendidos......: ");
-					quantidade = Main.leia.nextInt();
-					break;
-				case 4: 
-					System.out.print  ("Digite o NOVO PRE�O UNITARIO do produto............: ");
-					precoUnitario = Main.leia.next().charAt(0);
-					break;
+					case 1:
+						Main.leia.nextLine();
+						System.out.print("Digite o NOVO NOME do Cliente......................: ");
+						nomeCliente = Main.leia.nextLine();
+						break;
+					case 2:
+						Main.leia.nextLine();
+						System.out.print("Digite a NOVA DATA de venda (DD/MM/AAAA)...........: ");
+						dtVenda = Main.leia.nextLine();
+						break;
+					case 3:
+						System.out.print("Digite a NOVA QUANTIDADE de produtos vendidos......: ");
+						quantidade = Main.leia.nextInt();
+						break;
+					case 4:
+						System.out.print("Digite o NOVO PRE�O UNITARIO do produto............: ");
+						precoUnitario = Main.leia.next().charAt(0);
+						break;
 				}
 				System.out.println();
-			}while (opcao != 0);  		
+			} while (opcao != 0);
 
 			do {
 				System.out.print("\nConfirma a alteracao dos dados (S/N) ? ");
@@ -218,13 +218,12 @@ public class Bebida {
 					salvarVenda();
 					System.out.println("Dados gravados com sucesso !\n");
 				}
-			}while (confirmacao != 'S' && confirmacao != 'N');
+			} while (confirmacao != 'S' && confirmacao != 'N');
 
-		}while ( ! codVenda.equals("FIM"));
+		} while (!codVenda.equals("FIM"));
 	}
 
-
-	//************************  EXCLUSAO  *****************************
+	// ************************ EXCLUSAO *****************************
 	public void excluir() {
 		String matriculaChave;
 		char confirmacao;
@@ -244,7 +243,7 @@ public class Bebida {
 				if (posicaoRegistro == -1) {
 					System.out.println("Matricula nao cadastrada no arquivo, digite outro valor\n");
 				}
-			}while (posicaoRegistro == -1);
+			} while (posicaoRegistro == -1);
 
 			if (matriculaChave.equals("FIM")) {
 				System.out.println("\n ************  PROGRAMA ENCERRADO  ************** \n");
@@ -263,13 +262,13 @@ public class Bebida {
 				if (confirmacao == 'S') {
 					desativarAluno(posicaoRegistro);
 				}
-			}while (confirmacao != 'S' && confirmacao != 'N');
+			} while (confirmacao != 'S' && confirmacao != 'N');
 
-		}while ( ! matricula.equals("FIM"));
+		} while (!matricula.equals("FIM"));
 	}
 
-	//************************  CONSULTA  *****************************
-	public void consultar() 	{
+	// ************************ CONSULTA *****************************
+	public void consultar() {
 		RandomAccessFile arqAluno;
 		byte opcao;
 		String matriculaChave;
@@ -288,115 +287,170 @@ public class Bebida {
 				if (opcao < 0 || opcao > 3) {
 					System.out.println("opcao Invalida, digite novamente.\n");
 				}
-			}while (opcao < 0 || opcao > 3);
+			} while (opcao < 0 || opcao > 3);
 
 			switch (opcao) {
-			case 0:
-				System.out.println("\n ************  PROGRAMA ENCERRADO  ************** \n");
-				break;
+				case 0:
+					System.out.println("\n ************  PROGRAMA ENCERRADO  ************** \n");
+					break;
 
-			case 1:  // consulta de uma unica matricula
-				Main.leia.nextLine();  // limpa buffer de memoria
-				System.out.print("Digite a Matriocula do Aluno: ");
-				matriculaChave = Main.leia.nextLine();
-
-				posicaoRegistro = pesquisarAluno(matriculaChave);
-				if (posicaoRegistro == -1) {
-					System.out.println("Matricula nao cadastrada no arquivo \n");
-				} else {
-					imprimirCabecalho();
-					imprimirAluno();
-					System.out.println("\n FIM DE RELATORIO - ENTER para continuar...\n");
-					Main.leia.nextLine();
-				}
-
-				break;
-
-			case 2:  // imprime todos os alunos
-				try { 
-					arqAluno = new RandomAccessFile("ALUNO.DAT" , "rw");
-					imprimirCabecalho();
-					while (true) {
-						ativo		= arqAluno.readChar();
-						matricula   = arqAluno.readUTF();
-						nomeAluno   = arqAluno.readUTF();
-						dtNasc      = arqAluno.readUTF();
-						mensalidade = arqAluno.readFloat();
-						sexo        = arqAluno.readChar();
-						if ( ativo == 'S') {
-							imprimirAluno();
-						}
-					}
-					//    arqAluno.close();
-				} catch (EOFException e) {
-					System.out.println("\n FIM DE RELATORIO - ENTER para continuar...\n");
-					Main.leia.nextLine();
+				case 1: // consulta de uma unica matricula
+					Main.leia.nextLine(); // limpa buffer de memoria
+					System.out.print("Digite a Matriocula do Aluno: ");
 					matriculaChave = Main.leia.nextLine();
-				} catch (IOException e) { 
-					System.out.println("Erro na abertura do arquivo - programa sera finalizado");
-					System.exit(0);
-				}
-				break;
 
-			case 3:  // imprime alunos do sexo desejado
-				do {
-					System.out.print("Digite o Sexo desejado (M/F): ");
-					sexoAux = Main.leia.next().charAt(0);
-					if (sexoAux != 'F' && sexoAux != 'M') {
-						System.out.println("Sexo Invalido, digite M ou F");
+					posicaoRegistro = pesquisarAluno(matriculaChave);
+					if (posicaoRegistro == -1) {
+						System.out.println("Matricula nao cadastrada no arquivo \n");
+					} else {
+						imprimirCabecalho();
+						imprimirAluno();
+						System.out.println("\n FIM DE RELATORIO - ENTER para continuar...\n");
+						Main.leia.nextLine();
 					}
-				}while (sexoAux != 'F' && sexoAux != 'M');
 
-				try { 
-					arqAluno = new RandomAccessFile("ALUNO.DAT", "rw");
-					imprimirCabecalho();
-					while (true) {
-						ativo		= arqAluno.readChar();
-						matricula   = arqAluno.readUTF();
-						nomeAluno   = arqAluno.readUTF();
-						dtNasc      = arqAluno.readUTF();
-						mensalidade = arqAluno.readFloat();
-						sexo        = arqAluno.readChar();
+					break;
 
-						if ( sexoAux == sexo && ativo == 'S') {
-							imprimirAluno();
+				case 2: // imprime todos os alunos
+					try {
+						arqAluno = new RandomAccessFile("ALUNO.DAT", "rw");
+						imprimirCabecalho();
+						while (true) {
+							ativo = arqAluno.readChar();
+							matricula = arqAluno.readUTF();
+							nomeAluno = arqAluno.readUTF();
+							dtNasc = arqAluno.readUTF();
+							mensalidade = arqAluno.readFloat();
+							sexo = arqAluno.readChar();
+							if (ativo == 'S') {
+								imprimirAluno();
+							}
 						}
+						// arqAluno.close();
+					} catch (EOFException e) {
+						System.out.println("\n FIM DE RELATORIO - ENTER para continuar...\n");
+						Main.leia.nextLine();
+						matriculaChave = Main.leia.nextLine();
+					} catch (IOException e) {
+						System.out.println("Erro na abertura do arquivo - programa sera finalizado");
+						System.exit(0);
 					}
-				} catch (EOFException e) {
-					System.out.println("\n FIM DE RELATORIO - ENTER para continuar...\n");
-					Main.leia.nextLine();
-					matriculaChave = Main.leia.nextLine();
-				} catch (IOException e) { 
-					System.out.println("Erro na abertura do arquivo - programa sera finalizado");
-					System.exit(0);
-				}
+					break;
 
-			}	
+				case 3: // imprime alunos do sexo desejado
+					do {
+						System.out.print("Digite o Sexo desejado (M/F): ");
+						sexoAux = Main.leia.next().charAt(0);
+						if (sexoAux != 'F' && sexoAux != 'M') {
+							System.out.println("Sexo Invalido, digite M ou F");
+						}
+					} while (sexoAux != 'F' && sexoAux != 'M');
 
-		} while ( opcao != 0 );
+					try {
+						arqAluno = new RandomAccessFile("ALUNO.DAT", "rw");
+						imprimirCabecalho();
+						while (true) {
+							ativo = arqAluno.readChar();
+							matricula = arqAluno.readUTF();
+							nomeAluno = arqAluno.readUTF();
+							dtNasc = arqAluno.readUTF();
+							mensalidade = arqAluno.readFloat();
+							sexo = arqAluno.readChar();
+
+							if (sexoAux == sexo && ativo == 'S') {
+								imprimirAluno();
+							}
+						}
+					} catch (EOFException e) {
+						System.out.println("\n FIM DE RELATORIO - ENTER para continuar...\n");
+						Main.leia.nextLine();
+						matriculaChave = Main.leia.nextLine();
+					} catch (IOException e) {
+						System.out.println("Erro na abertura do arquivo - programa sera finalizado");
+						System.exit(0);
+					}
+
+			}
+
+		} while (opcao != 0);
 	}
 
-	public void imprimirCabecalho () {
+	public void imprimirCabecalho() {
 		System.out.println("-MATRICULA-  -------- NOME ALUNO ----------  --DATA NASC--  -Mensalidade-  -sexo- ");
 	}
 
-	public void imprimirAluno () {
-		System.out.println(	formatarString(matricula, 11 ) + "  " +
-				formatarString(nomeAluno , 30) + "  " + 
-				formatarString(dtNasc , 13) + "  " + 
-				formatarString( String.valueOf(mensalidade) , 13 ) + "  " +
-				formatarString( Character.toString(sexo) , 6 )   ); 
+	public void imprimirAluno() {
+		System.out.println(
+				formatarString(matricula, 11) + "  " + formatarString(nomeAluno, 30) + "  " + formatarString(dtNasc, 13) + "  "
+						+ formatarString(String.valueOf(mensalidade), 13) + "  " + formatarString(Character.toString(sexo), 6));
 	}
 
-	public static String formatarString (String texto, int tamanho) {	
-		// retorna uma string com o numero de caracteres passado como parametro em TAMANHO
+	public static String formatarString(String texto, int tamanho) {
+		// retorna uma string com o numero de caracteres passado como parametro em
+		// TAMANHO
 		if (texto.length() > tamanho) {
-			texto = texto.substring(0,tamanho);
-		}else{
+			texto = texto.substring(0, tamanho);
+		} else {
 			while (texto.length() < tamanho) {
 				texto = texto + " ";
 			}
 		}
 		return texto;
 	}
+
+	public static boolean validarData(String data) {
+		if (data.length() != 10) {
+			System.out.println("Data invalida, digite 10 caracteres no formato DD/MM/AAAA");
+			return false;
+		}
+		if (data.charAt(2) != '/' || data.charAt(5) != '/') {
+			System.out.println("Data invalida, digite / na 3a e 6a posicoes da data");
+			return false;
+		}
+
+		int ano, mes, dia;
+		try {
+			ano = Integer.parseInt(data.substring(6));
+			mes = Integer.parseInt(data.substring(3, 5));
+			dia = Integer.parseInt(data.substring(0, 2));
+		} catch (NumberFormatException e) {
+			System.out.println("Data invalida, digite dia, mes e ano numericos");
+			return false;
+		}
+
+		if (ano > 2020) {
+			System.out.println("Ano invalido, digite maximo 2020");
+			return false;
+		}
+		if (mes < 1 || mes > 12) {
+			System.out.println("Mes invalido, digite de 1 a 12");
+			return false;
+		}
+		if (dia < 1 || dia > 31) {
+			System.out.println("Data invalida, digite dia acima de zero e abaixo de 31");
+			return false;
+		}
+		if ((mes == 4 || mes == 6 || mes == 9 || mes == 11) && dia > 30) {
+			System.out.println("Data invalida, para este mes o dia deve ser no maximo 30");
+			return false;
+		}
+		if (mes == 2) {
+			if (ano % 4 == 0 && ano % 100 != 0 || ano % 400 == 0) { // ano bissexto
+				if (dia > 29) {
+					System.out.println("Data invalida, neste ano o mes Fevereiro pode ter maximo 29 dias");
+					return false;
+				}
+			} else {
+				if (dia > 28) {
+					System.out.println("Data invalida, neste ano o mes Fevereiro pode ter maximo 28 dias");
+					return false;
+				}
+			}
+		}
+
+		return true;
+	}
+
+	// public static boolean validarCodProduto(String codProduto)
+	// public void calcularImpostos()
 }
