@@ -18,9 +18,9 @@ public class Bebida {
 			"Coca Cola 2lts", "Guaraná Antártica 2lts", "Whisky Cavalo Branco", "Whisky Ballantines", "Vinho Concha Y Toro",
 			"Vinho Tinto Miolo", "Suco Laranja Tropicana" };
 
-	static String vetCategorias[] = { "destilado alc�lico importado", "fermentado alc�lico nacional",
-			"fermentado alc�lico nacional", "sem �lcool nacional", "sem �lcool nacional", "destilado alc�lico importado",
-			"destilado alc�lico importado", "alc�lico importado", "alc�lico nacional", "sem �lcool importado" };
+	static String vetCategorias[] = { "destilado alcoólico importado", "fermentado alcoólico nacional",
+			"fermentado alcoólico nacional", "sem álcool nacional", "sem álcool nacional", "destilado alcoólico importado",
+			"destilado alcoólico importado", "alcoólico importado", "alcoólico nacional", "sem álcool importado" };
 	static String nomeArquivo = "VENDAS.DAT";
 
 	public long pesquisarVenda(String codVendaPesq) {
