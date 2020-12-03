@@ -18,10 +18,9 @@ public class Bebida {
 			"Coca Cola 2lts", "Guaraná Antártica 2lts", "Whisky Cavalo Branco", "Whisky Ballantines", "Vinho Concha Y Toro",
 			"Vinho Tinto Miolo", "Suco Laranja Tropicana" };
 
-	static String vetCategorias[] = { "destilado alcoólico importado", "fermentado alcoólico nacional",
-			"fermentado alcoólico nacional", "sem álcool nacional", "sem álcool nacional", "destilado alcoólico importado",
-			"destilado alcoólico importado", "alcoólico importado", "alcoólico nacional", "sem álcool importado" };
-
+	static String vetCategorias[] = { "destilado alc�lico importado", "fermentado alc�lico nacional",
+			"fermentado alc�lico nacional", "sem �lcool nacional", "sem �lcool nacional", "destilado alc�lico importado",
+			"destilado alc�lico importado", "alc�lico importado", "alc�lico nacional", "sem �lcool importado" };
 	static String nomeArquivo = "VENDAS.DAT";
 
 	public long pesquisarVenda(String codVendaPesq) {
@@ -273,7 +272,7 @@ public class Bebida {
 	public void consultar() {
 		RandomAccessFile arqVendas;
 		byte opcao;
-		String matriculaChave;
+		String codVenda;
 		char sexoAux;
 		long posicaoRegistro;
 
@@ -299,9 +298,9 @@ public class Bebida {
 				case 1: // VENDAS POR MES
 					Main.leia.nextLine(); // limpa buffer de memoria
 					System.out.print("Digite a Matriocula do Aluno: ");
-					matriculaChave = Main.leia.nextLine();
+					codVenda = Main.leia.nextLine();
 
-					posicaoRegistro = pesquisarVenda(matriculaChave);
+					posicaoRegistro = pesquisarVenda(codVenda);
 					if (posicaoRegistro == -1) {
 						System.out.println("Matricula nao cadastrada no arquivo \n");
 					} else {
@@ -337,7 +336,7 @@ public class Bebida {
 					} catch (EOFException e) {
 						System.out.println("\n FIM DE RELATORIO - ENTER para continuar...\n");
 						Main.leia.nextLine();
-						matriculaChave = Main.leia.nextLine();
+						codVenda = Main.leia.nextLine();
 					} catch (IOException e) {
 						System.out.println("Erro na abertura do arquivo - programa sera finalizado");
 						System.exit(0);
@@ -371,7 +370,7 @@ public class Bebida {
 					} catch (EOFException e) {
 						System.out.println("\n FIM DE RELATORIO - ENTER para continuar...\n");
 						Main.leia.nextLine();
-						matriculaChave = Main.leia.nextLine();
+						codVenda = Main.leia.nextLine();
 					} catch (IOException e) {
 						System.out.println("Erro na abertura do arquivo - programa sera finalizado");
 						System.exit(0);
