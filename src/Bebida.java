@@ -11,6 +11,7 @@ public class Bebida {
 	int quantidade;
 	float precoUnitario;
 	float vlrImposto;
+	String teste;
 
 	static String vetCodProdutos[] = { "WJW", "CSL", "CBL", "CCO", "GAN", "WCB", "WBL", "VCT", "VTM", "SLT" };
 
