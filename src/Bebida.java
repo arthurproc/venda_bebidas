@@ -22,11 +22,13 @@ public class Bebida {
 			"fermentado alcoólico nacional", "sem álcool nacional", "sem álcool nacional", "destilado alcoólico importado",
 			"destilado alcoólico importado", "alcoólico importado", "alcoólico nacional", "sem álcool importado" };
 
+	static String nomeArquivo = "VENDAS.DAT";
+
 	public long pesquisarVenda(String codVendaPesq) {
 		// metodo para localizar um registro no arquivo em disco
 		long posicaoCursorArquivo = 0;
 		try {
-			RandomAccessFile arqVendas = new RandomAccessFile("VENDAS.DAT", "rw");
+			RandomAccessFile arqVendas = new RandomAccessFile(nomeArquivo, "rw");
 			while (true) {
 				posicaoCursorArquivo = arqVendas.getFilePointer(); // posicao do inicio do registro no arquivo
 
@@ -57,7 +59,7 @@ public class Bebida {
 	public void salvarVenda() {
 		// metodo para incluir um novo registro no final do arquivo em disco
 		try {
-			RandomAccessFile arqVendas = new RandomAccessFile("VENDAS.DAT", "rw");
+			RandomAccessFile arqVendas = new RandomAccessFile(nomeArquivo, "rw");
 			arqVendas.seek(arqVendas.length()); // posiciona o ponteiro no final do arquivo (EOF)
 			arqVendas.writeChar(ativo);
 			arqVendas.writeUTF(codVenda);
@@ -80,7 +82,7 @@ public class Bebida {
 		// metodo para alterar o valor do campo ATIVO para N, tornando assim o registro
 		// excluido
 		try {
-			RandomAccessFile arqVendas = new RandomAccessFile("VENDAS.DAT", "rw");
+			RandomAccessFile arqVendas = new RandomAccessFile(nomeArquivo, "rw");
 			arqVendas.seek(posicao);
 			arqVendas.writeChar('N'); // desativar o registro antigo
 			arqVendas.close();
@@ -232,14 +234,14 @@ public class Bebida {
 		do {
 			do {
 				Main.leia.nextLine();
-				System.out.println(" ***************  EXCLUSAO DE ALUNOS  ***************** ");
-				System.out.print("Digite a Matricula do Aluno que deseja excluir ( FIM para encerrar ): ");
+				System.out.println(" ***************  EXCLUSAO DE VENDAS  ***************** ");
+				System.out.print("Digite o código da venda que deseja excluir ( FIM para encerrar ): ");
 				matriculaChave = Main.leia.nextLine();
 				if (matriculaChave.equals("FIM")) {
 					break;
 				}
 
-				posicaoRegistro = pesquisarAluno(matriculaChave);
+				posicaoRegistro = pesquisarVenda(matriculaChave);
 				if (posicaoRegistro == -1) {
 					System.out.println("Matricula nao cadastrada no arquivo, digite outro valor\n");
 				}
@@ -250,26 +252,26 @@ public class Bebida {
 				break;
 			}
 
-			System.out.println("Nome do aluno.......: " + nomeAluno);
-			System.out.println("Data de nascimento..: " + dtNasc);
-			System.out.println("Valor da mensalidade: " + mensalidade);
-			System.out.println("Sexo do aluno.......: " + sexo);
+			System.out.println("Nome do Cliente............: " + nomeCliente);
+			System.out.println("Data da venda..............: " + dtVenda);
+			System.out.println("Quantidade Vendida ........: " + quantidade);
+			System.out.println("Preço unitário.............: " + precoUnitario);
 			System.out.println();
 
 			do {
-				System.out.print("\nConfirma a exclusao deste aluno (S/N) ? ");
+				System.out.print("\nConfirma a exclusao desta venda (S/N) ? ");
 				confirmacao = Main.leia.next().charAt(0);
 				if (confirmacao == 'S') {
-					desativarAluno(posicaoRegistro);
+					desativarVenda(posicaoRegistro);
 				}
 			} while (confirmacao != 'S' && confirmacao != 'N');
 
-		} while (!matricula.equals("FIM"));
+		} while (!matriculaChave.equals("FIM"));
 	}
 
 	// ************************ CONSULTA *****************************
 	public void consultar() {
-		RandomAccessFile arqAluno;
+		RandomAccessFile arqVendas;
 		byte opcao;
 		String matriculaChave;
 		char sexoAux;
@@ -277,10 +279,10 @@ public class Bebida {
 
 		do {
 			do {
-				System.out.println(" ***************  CONSULTA DE ALUNOS  ***************** ");
-				System.out.println(" [1] CONSULTAR APENAS 1 ALUNO ");
-				System.out.println(" [2] LISTA DE TODOS OS ALUNOS ");
-				System.out.println(" [3] LISTA SOMENTE SEXO MASCULINO OU FEMININO ");
+				System.out.println(" ***************  CONSULTA DE VENDAS  ***************** ");
+				System.out.println(" [1] VENDAS POR MES ");
+				System.out.println(" [2] VENDAS POR CLIENTE ");
+				System.out.println(" [3] TODAS AS VENDAS ");
 				System.out.println(" [0] SAIR");
 				System.out.print("\nDigite a opcao desejada: ");
 				opcao = Main.leia.nextByte();
@@ -294,36 +296,41 @@ public class Bebida {
 					System.out.println("\n ************  PROGRAMA ENCERRADO  ************** \n");
 					break;
 
-				case 1: // consulta de uma unica matricula
+				case 1: // VENDAS POR MES
 					Main.leia.nextLine(); // limpa buffer de memoria
 					System.out.print("Digite a Matriocula do Aluno: ");
 					matriculaChave = Main.leia.nextLine();
 
-					posicaoRegistro = pesquisarAluno(matriculaChave);
+					posicaoRegistro = pesquisarVenda(matriculaChave);
 					if (posicaoRegistro == -1) {
 						System.out.println("Matricula nao cadastrada no arquivo \n");
 					} else {
 						imprimirCabecalho();
-						imprimirAluno();
+						imprimirVenda();
 						System.out.println("\n FIM DE RELATORIO - ENTER para continuar...\n");
 						Main.leia.nextLine();
 					}
 
 					break;
 
-				case 2: // imprime todos os alunos
+				case 2: //VENDAS POR CLIENTE
 					try {
-						arqAluno = new RandomAccessFile("ALUNO.DAT", "rw");
+						arqVendas = new RandomAccessFile(nomeArquivo, "rw");
 						imprimirCabecalho();
 						while (true) {
-							ativo = arqAluno.readChar();
-							matricula = arqAluno.readUTF();
-							nomeAluno = arqAluno.readUTF();
-							dtNasc = arqAluno.readUTF();
-							mensalidade = arqAluno.readFloat();
-							sexo = arqAluno.readChar();
+							ativo = arqVendas.readChar();
+							codVenda = arqVendas.readUTF();
+							nomeCliente = arqVendas.readUTF();
+							codVenda = arqVendas.readUTF();
+							nomeCliente = arqVendas.readUTF();
+							codProduto = arqVendas.readUTF();
+							descProduto = arqVendas.readUTF();
+							dtVenda = arqVendas.readUTF();
+							quantidade = arqVendas.readInt();
+							precoUnitario = arqVendas.readFloat();
+							vlrImposto = arqVendas.readFloat();
 							if (ativo == 'S') {
-								imprimirAluno();
+								imprimirVenda();
 							}
 						}
 						// arqAluno.close();
@@ -337,7 +344,7 @@ public class Bebida {
 					}
 					break;
 
-				case 3: // imprime alunos do sexo desejado
+				case 3: // TODAS AS VENDAS
 					do {
 						System.out.print("Digite o Sexo desejado (M/F): ");
 						sexoAux = Main.leia.next().charAt(0);
@@ -347,18 +354,18 @@ public class Bebida {
 					} while (sexoAux != 'F' && sexoAux != 'M');
 
 					try {
-						arqAluno = new RandomAccessFile("ALUNO.DAT", "rw");
+						arqVendas = new RandomAccessFile(nomeArquivo, "rw");
 						imprimirCabecalho();
 						while (true) {
-							ativo = arqAluno.readChar();
-							matricula = arqAluno.readUTF();
-							nomeAluno = arqAluno.readUTF();
-							dtNasc = arqAluno.readUTF();
-							mensalidade = arqAluno.readFloat();
-							sexo = arqAluno.readChar();
+							ativo = arqVendas.readChar();
+							matricula = arqVendas.readUTF();
+							nomeAluno = arqVendas.readUTF();
+							dtNasc = arqVendas.readUTF();
+							mensalidade = arqVendas.readFloat();
+							sexo = arqVendas.readChar();
 
 							if (sexoAux == sexo && ativo == 'S') {
-								imprimirAluno();
+								imprimirVenda();
 							}
 						}
 					} catch (EOFException e) {
@@ -376,13 +383,14 @@ public class Bebida {
 	}
 
 	public void imprimirCabecalho() {
-		System.out.println("-MATRICULA-  -------- NOME ALUNO ----------  --DATA NASC--  -Mensalidade-  -sexo- ");
+		System.out.println("CODVENDA  CLIENTE	        DESCR PROD.   DT.VENDA  QUANT PRC UNIT IMPOSTO  VLRVENDA	");
 	}
 
-	public void imprimirAluno() {
+	public void imprimirVenda() {
+		float valorVenda =  quantidade  *  precoUnitario  +  vlrImposto * quantidade;
 		System.out.println(
-				formatarString(matricula, 11) + "  " + formatarString(nomeAluno, 30) + "  " + formatarString(dtNasc, 13) + "  "
-						+ formatarString(String.valueOf(mensalidade), 13) + "  " + formatarString(Character.toString(sexo), 6));
+				formatarString(codVenda, 11) + "  " + formatarString(nomeCliente, 30) + "  " + formatarString(descProduto, 13) + "  "
+						+ formatarString(dtVenda, 13) + "  " + formatarString(Integer.toString(quantidade), 6)+ "  " + formatarString(Float.toString(precoUnitario), 6)+ "  " + formatarString(Float.toString(vlrImposto), 6)+ "  " + formatarString(Float.toString(valorVenda), 6));
 	}
 
 	public static String formatarString(String texto, int tamanho) {
@@ -451,6 +459,6 @@ public class Bebida {
 		return true;
 	}
 
-	// public static boolean validarCodProduto(String codProduto)
-	// public void calcularImpostos()
+	// public static String validarCodProduto(String codProduto) return " " caso nao encontre | return descricao produto caso encontre
+	// public static float calcularImpostos(String codProduto, float precoUnitario) return valor imposto
 }
