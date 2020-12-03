@@ -71,6 +71,7 @@ public class Bebida {
 			arqVendas.writeFloat(vlrImposto);
 			arqVendas.close();
 			System.out.println("Dados gravados com sucesso !\n");
+			arqVendas.close();
 		} catch (IOException e) {
 			System.out.println("Erro na abertura do arquivo  -  programa sera finalizado");
 			System.exit(0);
@@ -100,7 +101,7 @@ public class Bebida {
 		do {
 			do {
 				Main.leia.nextLine();
-				System.out.println("\n ***************  INCLUSAO DE ALUNOS  ***************** ");
+				System.out.println("\n ***************  INCLUSAO DE VENDAS  ***************** ");
 				System.out.print("Digite o codigo da Venda ( FIM para encerrar): ");
 				codVendaChave = Main.leia.nextLine();
 				if (codVendaChave.equals("FIM")) {
@@ -124,14 +125,14 @@ public class Bebida {
 			codVenda = codVendaChave;
 			System.out.print("Digite o nome do cliente.........................: ");
 			nomeCliente = Main.leia.nextLine();
-			System.out.print("Digite o c�digo da venda.........................: ");
+			System.out.print("Digite o código da venda.........................: ");
 			codVenda = Main.leia.next();
-			System.out.println("Descri��o do produto...........................: " + descProduto);
+			System.out.println("Descrição do produto...........................: " + descProduto);
 			System.out.print("Data da venda..................................: ");
 			dtVenda = Main.leia.next();
 			System.out.print("Quantidade Vendiada............................: ");
 			quantidade = Main.leia.nextInt();
-			System.out.print("Pre�o unit�rio.................................: ");
+			System.out.print("Preço unitário.................................: ");
 			precoUnitario = Main.leia.nextFloat();
 			System.out.println("Valor do imposto...............................: " + vlrImposto);
 			System.out.println(
@@ -159,7 +160,7 @@ public class Bebida {
 			do {
 				Main.leia.nextLine();
 				System.out.println("\n ***************  ALTERACAO DE VENDAS  ***************** ");
-				System.out.print("Digite a Matricula do Aluno que deseja alterar( FIM para encerrar ): ");
+				System.out.print("Digite o código da venda que deseja alterar( FIM para encerrar ): ");
 				codVendaChave = Main.leia.nextLine();
 				if (codVendaChave.equals("FIM")) {
 					break;
@@ -167,7 +168,7 @@ public class Bebida {
 
 				posicaoRegistro = pesquisarVenda(codVendaChave);
 				if (posicaoRegistro == -1) {
-					System.out.println("Venda n�o cadastrada no arquivo, digite outro valor\n");
+					System.out.println("Venda não cadastrada no arquivo, digite outro valor\n");
 				}
 			} while (posicaoRegistro == -1);
 
@@ -181,7 +182,7 @@ public class Bebida {
 				System.out.println("[ 1 ] Nome do Cliente............: " + nomeCliente);
 				System.out.println("[ 2 ] Data da venda..............: " + dtVenda);
 				System.out.println("[ 3 ] Quantidade Vendida ........: " + quantidade);
-				System.out.println("[ 4 ] Pre�o unit�rio.............: " + precoUnitario);
+				System.out.println("[ 4 ] Preço unitário.............: " + precoUnitario);
 
 				do {
 					System.out.println("Digite o numero do campo que deseja alterar (0 para finalizar as alterações): ");
@@ -204,8 +205,11 @@ public class Bebida {
 						quantidade = Main.leia.nextInt();
 						break;
 					case 4:
-						System.out.print("Digite o NOVO PRE�O UNITARIO do produto............: ");
+						System.out.print("Digite o NOVO PREÇO UNITARIO do produto............: ");
 						precoUnitario = Main.leia.next().charAt(0);
+						break;
+					default:
+						System.out.print("Opção inválida, tente novamente");
 						break;
 				}
 				System.out.println();
@@ -226,7 +230,7 @@ public class Bebida {
 
 	// ************************ EXCLUSAO *****************************
 	public void excluir() {
-		String matriculaChave;
+		String codVendaChave;
 		char confirmacao;
 		long posicaoRegistro = 0;
 
@@ -235,18 +239,18 @@ public class Bebida {
 				Main.leia.nextLine();
 				System.out.println(" ***************  EXCLUSAO DE VENDAS  ***************** ");
 				System.out.print("Digite o código da venda que deseja excluir ( FIM para encerrar ): ");
-				matriculaChave = Main.leia.nextLine();
-				if (matriculaChave.equals("FIM")) {
+				codVendaChave = Main.leia.nextLine();
+				if (codVendaChave.equals("FIM")) {
 					break;
 				}
 
-				posicaoRegistro = pesquisarVenda(matriculaChave);
+				posicaoRegistro = pesquisarVenda(codVendaChave);
 				if (posicaoRegistro == -1) {
-					System.out.println("Matricula nao cadastrada no arquivo, digite outro valor\n");
+					System.out.println("Venda nao cadastrada no arquivo, digite outro valor\n");
 				}
 			} while (posicaoRegistro == -1);
 
-			if (matriculaChave.equals("FIM")) {
+			if (codVendaChave.equals("FIM")) {
 				System.out.println("\n ************  PROGRAMA ENCERRADO  ************** \n");
 				break;
 			}
@@ -265,14 +269,13 @@ public class Bebida {
 				}
 			} while (confirmacao != 'S' && confirmacao != 'N');
 
-		} while (!matriculaChave.equals("FIM"));
+		} while (!codVendaChave.equals("FIM"));
 	}
 
 	// ************************ CONSULTA *****************************
 	public void consultar() {
 		RandomAccessFile arqVendas;
 		byte opcao;
-		String codVenda;
 		char sexoAux;
 		long posicaoRegistro;
 
@@ -312,7 +315,7 @@ public class Bebida {
 
 					break;
 
-				case 2: //VENDAS POR CLIENTE
+				case 2: // VENDAS POR CLIENTE
 					try {
 						arqVendas = new RandomAccessFile(nomeArquivo, "rw");
 						imprimirCabecalho();
@@ -375,21 +378,24 @@ public class Bebida {
 						System.out.println("Erro na abertura do arquivo - programa sera finalizado");
 						System.exit(0);
 					}
-
+					break;
+				default:
+					System.out.print("Opção inválida, tente novamente");
+					break;
 			}
-
 		} while (opcao != 0);
 	}
 
 	public void imprimirCabecalho() {
-		System.out.println("CODVENDA  CLIENTE	        DESCR PROD.   DT.VENDA  QUANT PRC UNIT IMPOSTO  VLRVENDA	");
+		System.out.println("CODVENDA--CLIENTE---------DESCR PROD.---DT.VENDA--QUANT-PRC UNIT-IMPOSTO--VLRVENDA--");
 	}
 
 	public void imprimirVenda() {
-		float valorVenda =  quantidade  *  precoUnitario  +  vlrImposto * quantidade;
-		System.out.println(
-				formatarString(codVenda, 11) + "  " + formatarString(nomeCliente, 30) + "  " + formatarString(descProduto, 13) + "  "
-						+ formatarString(dtVenda, 13) + "  " + formatarString(Integer.toString(quantidade), 6)+ "  " + formatarString(Float.toString(precoUnitario), 6)+ "  " + formatarString(Float.toString(vlrImposto), 6)+ "  " + formatarString(Float.toString(valorVenda), 6));
+		float valorVenda = quantidade * precoUnitario + vlrImposto * quantidade;
+		System.out.println(formatarString(codVenda, 9) + "  " + formatarString(nomeCliente, 16) + "  "
+				+ formatarString(descProduto, 14) + "  " + formatarString(dtVenda, 10) + "  "
+				+ formatarString(Integer.toString(quantidade), 6) + "  " + formatarString(Float.toString(precoUnitario), 9)
+				+ "  " + formatarString(Float.toString(vlrImposto), 9) + "  " + formatarString(Float.toString(valorVenda), 10));
 	}
 
 	public static String formatarString(String texto, int tamanho) {
@@ -458,6 +464,8 @@ public class Bebida {
 		return true;
 	}
 
-	// public static String validarCodProduto(String codProduto) return " " caso nao encontre | return descricao produto caso encontre
-	// public static float calcularImpostos(String codProduto, float precoUnitario) return valor imposto
+	// public static String validarCodProduto(String codProduto) return " " caso nao
+	// encontre | return descricao produto caso encontre
+	// public static float calcularImpostos(String codProduto, float precoUnitario)
+	// return valor imposto
 }
