@@ -125,7 +125,7 @@ public class Bebida {
 			codVenda = codVendaChave;
 			System.out.print("Digite o nome do cliente.........................: ");
 			nomeCliente = Main.leia.nextLine();
-			System.out.print("Digite o cï¿½digo da venda.........................: ");
+			System.out.print("Digite o código da venda.........................: ");
 			codVenda = Main.leia.next();
 			System.out.println("Descriï¿½ï¿½o do produto...........................: " + descProduto);
 			System.out.print("Data da venda..................................: ");
@@ -182,7 +182,7 @@ public class Bebida {
 				System.out.println("[ 1 ] Nome do Cliente............: " + nomeCliente);
 				System.out.println("[ 2 ] Data da venda..............: " + dtVenda);
 				System.out.println("[ 3 ] Quantidade Vendida ........: " + quantidade);
-				System.out.println("[ 4 ] Preï¿½o unitï¿½rio.............: " + precoUnitario);
+				System.out.println("[ 4 ] Preço unitário.............: " + precoUnitario);
 
 				do {
 					System.out.println("Digite o numero do campo que deseja alterar (0 para finalizar as alteraÃ§Ãµes): ");
@@ -227,7 +227,7 @@ public class Bebida {
 
 	// ************************ EXCLUSAO *****************************
 	public void excluir() {
-		String matriculaChave;
+		String codVendaChave;
 		char confirmacao;
 		long posicaoRegistro = 0;
 
@@ -236,18 +236,18 @@ public class Bebida {
 				Main.leia.nextLine();
 				System.out.println(" ***************  EXCLUSAO DE VENDAS  ***************** ");
 				System.out.print("Digite o cÃ³digo da venda que deseja excluir ( FIM para encerrar ): ");
-				matriculaChave = Main.leia.nextLine();
-				if (matriculaChave.equals("FIM")) {
+				codVendaChave = Main.leia.nextLine();
+				if (codVendaChave.equals("FIM")) {
 					break;
 				}
 
-				posicaoRegistro = pesquisarVenda(matriculaChave);
+				posicaoRegistro = pesquisarVenda(codVendaChave);
 				if (posicaoRegistro == -1) {
 					System.out.println("Matricula nao cadastrada no arquivo, digite outro valor\n");
 				}
 			} while (posicaoRegistro == -1);
 
-			if (matriculaChave.equals("FIM")) {
+			if (codVendaChave.equals("FIM")) {
 				System.out.println("\n ************  PROGRAMA ENCERRADO  ************** \n");
 				break;
 			}
@@ -266,7 +266,7 @@ public class Bebida {
 				}
 			} while (confirmacao != 'S' && confirmacao != 'N');
 
-		} while (!matriculaChave.equals("FIM"));
+		} while (!codVendaChave.equals("FIM"));
 	}
 
 	// ************************ CONSULTA *****************************
