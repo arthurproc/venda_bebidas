@@ -1,9 +1,15 @@
- import java.util.*;
+import java.util.*;
+import java.text.DecimalFormat;
 public class Main {
 	static Scanner leia = new Scanner(System.in);
+	static  DecimalFormat df = new DecimalFormat();
 	
-	public static void main(String[] args) {	
-		Bebida bebida = new Bebida();
+    	
+	
+    	public static void main(String[] args) {	
+    		df.applyPattern("R$ #,##0.00");
+    	
+    	Bebida bebida = new Bebida();
     	byte opcao = -1;
     	 
     	do {
@@ -16,6 +22,7 @@ public class Main {
     			System.out.println(" [0] SAIR");
     			System.out.print("\nDigite a opcao desejada: ");
     			opcao = leia.nextByte();
+    			leia.nextLine();
     			if (opcao < 0 || opcao > 4) {
     				System.out.println("opcao Invalida, digite novamente.\n");
     			}
